@@ -1,0 +1,27 @@
+# Anything that doesn't belong in the build context.
+# Keeps `docker build` fast and avoids leaking secrets.
+
+# Local dev / env
+.env
+.env.*
+!.env.example
+*.log
+
+# Cargo build artifacts
+target/
+
+# OS / editor cruft
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Git
+.git/
+.gitignore
+.github/
+
+# CI / docs that don't change runtime behavior
+README.md
+LICENSE
+*.md
