@@ -1,4 +1,4 @@
-# Rust Tutorial: Zero → Senior Engineer
+# 404skills — Rust
 
 A self-contained, fullstack tutorial app for learning Rust end-to-end,
 built for engineers who already know Node/TypeScript and need to be
@@ -174,7 +174,7 @@ top and depends on all the domains, but no domain depends on HTTP.
 `main.rs` is just the composition root.
 
 ```
-rust-zero-to-senior/
+404skills-rust/
 ├── Cargo.toml          # crate manifest + dependencies
 ├── Cargo.lock          # resolver output (committed for binaries)
 ├── src/

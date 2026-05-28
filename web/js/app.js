@@ -15,8 +15,8 @@ async function main() {
   await initChat();
 
   await initLessons({
-    onChange(lesson) {
-      resetPlayground(lesson.code || '');
+    onChange(lesson, lessonChanged) {
+      if (lessonChanged) resetPlayground(lesson.code || '');
       syncToLesson(lesson);
     },
   });

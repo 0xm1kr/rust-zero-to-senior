@@ -141,4 +141,8 @@
     border-right: none;
     border-bottom: 1px solid var(--border);
   }
+  #sidebar header { padding: 14px 14px 12px; }
+  .category-header { padding: 12px 14px 4px; }
+  .lesson-item { padding: 8px 14px; font-size: 13px; }
+  #sidebar footer { padding: 10px 14px; }
 }

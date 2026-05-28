@@ -5,10 +5,12 @@
 // file. The functions intentionally stay thin: HTTP error → thrown Error,
 // payload → the parsed JSON body, no retry logic.
 
+const apiUrl = (path) => new URL(path, new URL('../api/', import.meta.url));
+
 // fetchLessons returns the catalog summary list ([{id, title, category}]).
 // Throws on non-2xx.
 export async function fetchLessons() {
-  const res = await fetch('/api/lessons');
+  const res = await fetch(apiUrl('lessons'));
   if (!res.ok) throw new Error(`lessons: ${res.status}`);
   return res.json();
 }
@@ -16,7 +18,7 @@ export async function fetchLessons() {
 // fetchLesson returns one full lesson (description + starter code + notes).
 // Throws on non-2xx; the lesson id is URL-encoded for safety.
 export async function fetchLesson(id) {
-  const res = await fetch(`/api/lessons/${encodeURIComponent(id)}`);
+  const res = await fetch(apiUrl(`lessons/${encodeURIComponent(id)}`));
   if (!res.ok) throw new Error(`lesson ${id}: ${res.status}`);
   return res.json();
 }
@@ -27,7 +29,7 @@ export async function fetchLesson(id) {
 // throw on res.ok being false here — the caller renders the result either
 // way.
 export async function runCode(code) {
-  const res = await fetch('/api/run', {
+  const res = await fetch(apiUrl('run'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ code }),
@@ -42,7 +44,7 @@ export async function runCode(code) {
 // of the app should keep working when the backend is unreachable.
 export async function fetchChatStatus() {
   try {
-    const res = await fetch('/api/chat/status');
+    const res = await fetch(apiUrl('chat/status'));
     return res.json();
   } catch {
     return { available: false, hint: 'Could not reach /api/chat/status.' };
@@ -53,7 +55,7 @@ export async function fetchChatStatus() {
 // full history) and returns the {message, error, retryAfter} envelope from
 // the server.
 export async function sendChat(lessonId, code, messages) {
-  const res = await fetch('/api/chat', {
+  const res = await fetch(apiUrl('chat'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ lessonId, code, messages }),

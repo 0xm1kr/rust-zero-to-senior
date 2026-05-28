@@ -9,9 +9,11 @@ import { $ } from './dom.js';
 import { state, saveProgress } from './state.js';
 import { fetchLessons, fetchLesson } from './api.js';
 
-// onChange is the callback supplied by app.js. Fires every time the active
-// lesson changes — used to repopulate the editor + chat panel.
+// onChange is the callback supplied by app.js. Fires after each successful
+// lesson render. The second argument is true only when the lesson id changed
+// so the playground can avoid wiping in-progress edits on redundant renders.
 let onChange = () => {};
+let renderGeneration = 0;
 
 // initLessons fetches the catalog, wires up sidebar interactions and
 // navigation buttons, and renders whichever lesson is referenced by the URL
@@ -104,13 +106,19 @@ async function renderCurrentLesson() {
   if (!id && state.lessons.length) id = state.lessons[0].id;
   if (!id) return;
 
+  const generation = ++renderGeneration;
+  const previousId = state.currentLesson?.id;
+
   let lesson;
   try {
     lesson = await fetchLesson(id);
   } catch {
+    if (generation !== renderGeneration) return;
     $('#lesson-title').textContent = 'Lesson not found';
     return;
   }
+  if (generation !== renderGeneration) return;
+
   state.currentLesson = lesson;
 
   $('#lesson-category').textContent = lesson.category;
@@ -131,7 +139,7 @@ async function renderCurrentLesson() {
   renderSidebar();
   window.scrollTo({ top: 0, behavior: 'instant' });
 
-  onChange(lesson);
+  onChange(lesson, previousId !== lesson.id);
 }
 
 // updateMarkCompleteButton toggles the "Mark complete" / "✓ Completed"
